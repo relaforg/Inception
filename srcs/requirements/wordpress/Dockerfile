@@ -12,7 +12,8 @@ RUN mkdir -p /var/www/html \
     && chmod +x wp-cli.phar \
     && mv wp-cli.phar /usr/local/bin/wp
 
-COPY wp-config.php /var/www/html/wp-config.php
+RUN mkdir -p /etc/wordpress
+COPY wp-config.php /etc/wordpress/wp-config.php
 COPY www.conf /etc/php/8.2/fpm/pool.d/www.conf
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh

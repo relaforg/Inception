@@ -5,6 +5,11 @@ define('DB_PASSWORD', getenv('MYSQL_PASSWORD'));
 define('DB_HOST',     'mariadb:3306');
 define('DB_CHARSET',  'utf8');
 
+define('WP_CACHE', true);
+define('WP_REDIS_HOST', 'redis');
+define('WP_REDIS_PORT', 6379);
+
+define('FS_METHOD', 'direct');
 define('WP_DEBUG', false);
 
 $table_prefix = 'wp_';
