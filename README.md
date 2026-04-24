@@ -22,6 +22,27 @@ To stop :
 make down
 ```
 
+## Project Description
+
+This project uses **Docker** and **Docker Compose** to orchestrate a small infrastructure of services running in isolated containers, each built from a custom `Dockerfile` based on `debian:bookworm-slim`.
+
+### Services included
+
+| Service | Image | Role |
+|---|---|---|
+| **nginx** | custom debian | Reverse proxy HTTPS (TLS 1.2/1.3), seul point d'entrée sur le port 443 |
+| **wordpress** | custom debian | Application PHP-FPM + WP-CLI pour l'installation automatique |
+| **mariadb** | custom debian | Base de données relationnelle persistante |
+
+### Main design choices
+
+- **No pre-built images** : chaque service est construit depuis `debian:bookworm-slim` via un `Dockerfile` dédié.
+- **Isolation réseau** : tous les conteneurs communiquent via un réseau Docker bridge nommé `inception`. Aucun conteneur n'utilise `network_mode: host`.
+- **Persistance des données** : les données MariaDB et WordPress sont stockées dans des volumes Docker nommés (`mariadb_data`, `wordpress_data`), montés respectivement dans `~/data/mariadb` et `~/data/wordpress` sur l'hôte.
+- **Secrets** : les credentials sont externalisés dans un fichier `srcs/.env` non versionné, injecté via `env_file` dans les conteneurs concernés.
+- **Démarrage ordonné** : des `healthcheck` garantissent que MariaDB est prêt avant WordPress, et WordPress avant nginx.
+- **Installation automatique** : WordPress est configuré et installé automatiquement au premier démarrage via WP-CLI, sans intervention manuelle.
+
 ## Key Concepts
 
 ### Virtual Machines vs Docker
