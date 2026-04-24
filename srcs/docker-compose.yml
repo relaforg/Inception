@@ -94,6 +94,18 @@ services:
       mariadb:
         condition: service_healthy
 
+  gitea:
+    container_name: gitea
+    build: requirements/gitea
+    restart: unless-stopped
+    env_file: .env
+    networks:
+      - inception
+    ports:
+      - "3000:3000"
+    volumes:
+      - gitea_data:/home/git/gitea/data
+
 networks:
   inception:
     driver: bridge
@@ -111,4 +123,10 @@ volumes:
     driver_opts:
       type: none
       device: /home/relaforg/data/wordpress
+      o: bind
+  gitea_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/relaforg/data/gitea
       o: bind
