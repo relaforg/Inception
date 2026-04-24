@@ -73,6 +73,15 @@ services:
     volumes:
       - wordpress_data:/var/www/html/wordpress
 
+  static_site:
+    container_name: static_site
+    build: requirements/static_site
+    restart: unless-stopped
+    networks:
+      - inception
+    ports:
+      - "8080:80"
+
 networks:
   inception:
     driver: bridge
