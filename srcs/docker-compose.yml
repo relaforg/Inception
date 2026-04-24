@@ -81,6 +81,18 @@ services:
       - inception
     ports:
       - "8080:80"
+    
+  adminer:
+    container_name: adminer
+    build: requirements/adminer
+    restart: unless-stopped
+    networks:
+      - inception
+    ports:
+      - "8081:8081"
+    depends_on:
+      mariadb:
+        condition: service_healthy
 
 networks:
   inception:
