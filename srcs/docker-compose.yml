@@ -17,6 +17,7 @@ services:
     container_name: mariadb
     build: requirements/mariadb
     restart: unless-stopped
+    env_file: .env
     networks:
       - inception
     volumes:
@@ -31,6 +32,7 @@ services:
     container_name: wordpress
     build: requirements/wordpress
     restart: unless-stopped
+    env_file: .env
     networks:
       - inception
     volumes:

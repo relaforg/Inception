@@ -9,9 +9,9 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
     mysqld --user=mysql &
     sleep 3
 
-    mariadb -e "CREATE DATABASE IF NOT EXISTS wordpress;"
-    mariadb -e "CREATE USER IF NOT EXISTS 'wpuser'@'%' IDENTIFIED BY 'password';"
-    mariadb -e "GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'%';"
+    mariadb -e "CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};"
+    mariadb -e "CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';"
+    mariadb -e "GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';"
     mariadb -e "FLUSH PRIVILEGES;"
     
     kill $(cat /run/mysqld/mysqld.pid)
