@@ -104,23 +104,10 @@ networks:
   inception:
     driver: bridge
 
-
 volumes:
   mariadb_data:
     driver: local
-    driver_opts:
-      type: none
-      device: /home/relaforg/data/mariadb
-      o: bind
   wordpress_data:
     driver: local
-    driver_opts:
-      type: none
-      device: /home/relaforg/data/wordpress
-      o: bind
   gitea_data:
     driver: local
-    driver_opts:
-      type: none
-      device: /home/relaforg/data/gitea
-      o: bind

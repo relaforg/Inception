@@ -3,10 +3,12 @@
 mkdir -p /run/mysqld
 chown mysql:mysql /run/mysqld
 
-if [ ! -d "/var/lib/mysql/mysql" ]; then
+if [ ! -d "/var/lib/mysql/${MYSQL_DATABASE}" ]; then
     mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
     mysqld --user=mysql &
+
+    until mariadb-admin ping --silent; do sleep 1; done
 
     mariadb -e "CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};"
     mariadb -e "CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';"
