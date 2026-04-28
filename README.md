@@ -33,14 +33,20 @@ This project uses **Docker** and **Docker Compose** to orchestrate a small infra
 | **nginx** | custom debian | Reverse proxy HTTPS (TLS 1.2/1.3), seul point d'entrée sur le port 443 |
 | **wordpress** | custom debian | Application PHP-FPM + WP-CLI pour l'installation automatique |
 | **mariadb** | custom debian | Base de données relationnelle persistante |
+| **redis** | custom debian | Cache en mémoire pour WordPress (port 6379) |
+| **ftp** | custom debian | Serveur FTP ProFTPD pour accéder aux fichiers WordPress (port 21) |
+| **static_site** | custom debian | Site statique de présentation |
+| **adminer** | custom debian | Interface web de gestion de base de données (via nginx) |
+| **gitea** | custom debian | Forge Git auto-hébergée (via nginx) |
 
 ### Main design choices
 
 - **No pre-built images** : chaque service est construit depuis `debian:bookworm-slim` via un `Dockerfile` dédié.
 - **Isolation réseau** : tous les conteneurs communiquent via un réseau Docker bridge nommé `inception`. Aucun conteneur n'utilise `network_mode: host`.
-- **Persistance des données** : les données MariaDB et WordPress sont stockées dans des volumes Docker nommés (`mariadb_data`, `wordpress_data`), montés respectivement dans `~/data/mariadb` et `~/data/wordpress` sur l'hôte.
+- **Reverse proxy unique** : nginx route le trafic HTTPS vers les services internes via des virtual hosts (`relaforg.42.fr`, `adminer.relaforg.42.fr`, `gitea.relaforg.42.fr`, `static.relaforg.42.fr`).
+- **Persistance des données** : les données MariaDB, WordPress et Gitea sont stockées dans des volumes Docker nommés.
 - **Secrets** : les credentials sont externalisés dans un fichier `srcs/.env` non versionné, injecté via `env_file` dans les conteneurs concernés.
-- **Démarrage ordonné** : des `healthcheck` garantissent que MariaDB est prêt avant WordPress, et WordPress avant nginx.
+- **Démarrage ordonné** : des `healthcheck` garantissent que MariaDB est prêt avant WordPress (et Redis avant WordPress), et WordPress avant nginx.
 - **Installation automatique** : WordPress est configuré et installé automatiquement au premier démarrage via WP-CLI, sans intervention manuelle.
 
 ## Key Concepts
@@ -82,5 +88,5 @@ volumes:
 ## Resources
 
 - [Dockerfiles](https://docs.docker.com/get-started/docker-concepts/building-images/writing-a-dockerfile/)
-- Various service docs (nginx, mariadb, ...)
-- [Claude](https://claude.ia)
+- Various service docs (nginx, mariadb, redis, gitea, proftpd...)
+- [Claude](https://claude.ai)
