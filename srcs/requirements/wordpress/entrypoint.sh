@@ -1,11 +1,5 @@
 #!/bin/sh
 
-# Attendre que MariaDB soit prêt
-until nc -z mariadb 3306; do
-    sleep 1
-done
-
-# Toujours écraser wp-config.php depuis le template hors volume
 cp /etc/wordpress/wp-config.php /var/www/html/wp-config.php
 
 # Installer WordPress si pas déjà fait
@@ -18,6 +12,11 @@ if ! wp core is-installed --path=/var/www/html --allow-root 2>/dev/null; then
         --admin_password="${WP_ADMIN_PASSWORD}" \
         --admin_email="${WP_ADMIN_EMAIL}" \
         --allow-root
+
+fi
+
+if ! wp user get john --path=/var/www/html --allow-root 2>/dev/null; then
+    wp user create john john.doe@example.com --role=subscriber --user_pass=${JOHN_PASS} --path=/var/www/html --allow-root
 fi
 
 # Installer et activer le plugin Redis Object Cache

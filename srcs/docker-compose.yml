@@ -79,8 +79,6 @@ services:
     restart: unless-stopped
     networks:
       - inception
-    ports:
-      - "8080:80"
     
   adminer:
     container_name: adminer
@@ -88,8 +86,6 @@ services:
     restart: unless-stopped
     networks:
       - inception
-    ports:
-      - "8081:8081"
     depends_on:
       mariadb:
         condition: service_healthy
@@ -101,8 +97,6 @@ services:
     env_file: .env
     networks:
       - inception
-    ports:
-      - "3000:3000"
     volumes:
       - gitea_data:/home/git/gitea/data
 
